@@ -1,17 +1,17 @@
-/* Import './styles/style.scss'; */
-
 import { Header } from './components/header';
 import { Button } from './components/buttons';
-import { Card } from './components/card';
-import { list } from 'postcss';
+import { List } from './components/pokemonList';
 
 function main() {
-  // eslint-disable-next-line no-new
-  new Header('#app');
+  const appElement = document.querySelector<HTMLDivElement>('.container');
+  if (appElement === null) return;
 
-  /*   New Card('#list', Card); */
-  // eslint-disable-next-line no-new
-  new Button('#buttons');
+  const header = new Header('.container');
+  const list = new List('.container');
+  const button = new Button('.container');
+  list.render();
+
+  console.log(header, list, button);
 }
 
 main();

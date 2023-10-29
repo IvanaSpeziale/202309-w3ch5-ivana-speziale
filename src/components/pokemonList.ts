@@ -1,30 +1,22 @@
-/* Import { Component } from './component';
+import { Component } from './component';
+import { ApiRepo } from '../data/repo';
+import { Card } from './card';
 import { Pokemon } from '../model/type';
 
-import { Card } from './card';
-/* Import '../scss/style.scss'; 
-import { ApiPokemon } from '../data/repo';
-
 export class List extends Component {
-  pokemons: Pokemon[];
-  repo: ApiPokemon;
-  template: string;
+  pokes: Pokemon[];
+  repo: ApiRepo;
+
   constructor(selector: string) {
     super(selector);
-    this.repo = new ApiPokemon();
-    this.pokemons = [];
-    this.loadPokemons();
-    console.log('First Load');
-    console.log(this.pokemons);
-    this.template = this.createTemplate();
-    this.render();
+    this.repo = new ApiRepo();
+    this.pokes = [];
+    this.loadPokes();
   }
 
-  async loadPokemons() {
+  async loadPokes() {
     try {
-      this.pokemons = await this.repo.getAllPokemon();
-      console.log('Load from API');
-      console.log(this.pokemons);
+      this.pokes = await this.repo.getPoke();
       this.clear();
       this.render();
     } catch (error) {
@@ -33,25 +25,27 @@ export class List extends Component {
   }
 
   clear() {
-    throw new Error('Method not implemented.');
+    // Borra el contenido del elemento ul
+    const ulElement = document.querySelector(`${this.selector} ul`);
+    if (ulElement) {
+      ulElement.innerHTML = '';
+    }
   }
 
   render() {
-    this.template = this.createTemplate();
-    super.render();
-    console.log('LISTA CON CARDS DE POKEMON');
-    console.log(this.pokemons);
-
-    const listPokemons: Pokemon[] = this.pokemons.content;
-
-    return listPokemons.map((item) => new Card('.cards', item));
+    const ulElement = document.querySelector(`${this.selector} ul`);
+    if (ulElement) {
+      this.pokes.forEach((item: Pokemon) => {
+        const card = new Card('li', item);
+        const cardElement = card.render(); // Obtener el elemento de la tarjeta
+        ulElement.appendChild(cardElement);
+      });
+    }
   }
 
   createTemplate() {
     return `
-    <div class="buttons-pages">
-   
-    </div>
-    <ul class="cards"></ul>`;
+      <ul></ul>
+    `;
   }
-} */
+}
