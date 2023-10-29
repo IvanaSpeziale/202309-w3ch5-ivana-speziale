@@ -1,43 +1,37 @@
+import { ApiRepo } from '../data/repo';
 import { Pokemon } from '../model/type';
 import { Component } from './component';
 
-/* Export class Card extends Component {
-  static render() {
-    throw new Error('Method not implemented.');
-  }
-
-  poke: Pokemon;
-  constructor(selector: string, poke: Pokemon) {
+export class Card extends Component {
+  pokemon: Pokemon;
+  repo: ApiRepo;
+  id: number = 0;
+  image: string = '';
+  constructor(selector: string, pokemon: string) {
     super(selector);
-    this.poke = { ...poke };
-    this.manageComponent();
+    this.repo = new ApiRepo();
+    this.pokemon = { ...JSON.parse(pokemon) };
+    (async () => {
+      const pokemonDetails = await this.loadDetails();
+      this.id = pokemonDetails.id;
+      this.manageComponent();
+    })();
   }
 
   manageComponent() {
-    this.template = this.createTemplate();
-    this.render();
+    throw new Error('Method not implemented.');
   }
 
-  render() {
-    super.render();
-  }
+  async loadDetails(): Promise<any> {
+    try {
+      const responseDetails = await this.repo.loadDetailsPokemons(
+        this.pokemon.url
+      );
 
-  createTemplate() {
-    const id = this.poke.url.split('/').filter(Boolean).pop();
-    return `
-    <li class="task-card"><p>${id}</p>
-    <div class = "image"><img class="gif" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif" alt="imagen del pokemon"></div>
-      <p><span></span> ${this.poke.name}</p>
-    </li>
-      `;
-  }
-} */
-export class Card extends Component {
-  pokemon: Pokemon;
-
-  constructor(selector: string, pokemon: Pokemon) {
-    super(selector);
-    this.pokemon = { ...pokemon };
+      return await responseDetails;
+    } catch (error) {
+      console.log((error as Error).message);
+    }
   }
 
   render() {
@@ -51,13 +45,15 @@ export class Card extends Component {
   }
 
   createTemplate() {
-    // Crea el contenido de la tarjeta
-    const id = this.pokemon.url.split('/').filter(Boolean).pop();
     return `
-    <li class="pokemon_card">
-    <p>${id}</p>
-      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif" height="120" width="120">
-      <h4 class="poke_name">${this.pokemon.name.toUpperCase()}</h4>
+    <li class="pokemon-card">
+      <a href="">
+      <p><span>ID:</span> ${this.id}</p>
+      <img alt="Image pokémon ${this.pokemon.name}" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${this.id}.gif">
+      
+      <p>${this.pokemon.name} </p>
+      <!--<p><span>Owner:</span> ${this.pokemon.url} </p>-->
+      </a>
     </li>
       `;
   }
